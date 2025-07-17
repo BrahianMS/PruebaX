@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "name": "Brahian Montoya",
+      "email": "jb@admin.com",
+      "password": "1234",
+      "role": "admin",
+      "id": "a1a1"
+    },
+    {
+      "id": "dac2",
+      "name": "a",
+      "email": "a@aaa",
+      "role": "user",
+      "password": "12"
+    },
+    {
+      "id": "deaa",
+      "name": "asd",
+      "email": "asd@szdf",
+      "role": "user",
+      "password": "45"
+    },
+    {
+      "id": "b34a",
+      "name": "mar",
+      "email": "mar@mar.com",
+      "role": "user",
+      "password": "123"
+    }
+  ],
+  "events": [
+    {
+      "name": "boda",
+      "desc": "bbbbbbbbbooooooooddddddddddaaaaaa",
+      "capacity": 20,
+      "date": "08-Dec,2025",
+      "register": ["b34a"],
+      "id": "sd54"
+    },
+    {
+      "name": "cumple",
+      "desc": "eeeeeeeeeeoooooooooo",
+      "capacity": 20,
+      "date": "08-Dec,2025",
+      "register": [],
+      "id": "fd21"
+    }
+  ]
+}

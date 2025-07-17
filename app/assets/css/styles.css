@@ -1,0 +1,21 @@
+:root {
+    --primary-color: #9749f0;
+    --secondary-color: rgb(213, 213, 213);
+    --font-firstcolor: #4d4d4d;
+    --font-secondcolor: #ffffff; 
+}
+
+
+.primary {
+    background-color: var(--primary-color);
+    color: var(--font-secondcolor);
+}
+
+.primary:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.secondary {
+    background-color: var(--secondary-color);
+}
