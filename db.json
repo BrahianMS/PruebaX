@@ -33,16 +33,16 @@
     {
       "name": "boda",
       "desc": "bbbbbbbbbooooooooddddddddddaaaaaa",
-      "capacity": 20,
-      "date": "08-Dec,2025",
-      "register": ["b34a"],
+      "capacity": "30",
+      "date": "2025-12-26",
+      "register": [],
       "id": "sd54"
     },
     {
       "name": "cumple",
-      "desc": "eeeeeeeeeeoooooooooo",
-      "capacity": 20,
-      "date": "08-Dec,2025",
+      "desc": "eeeeeooooooo",
+      "capacity": "20",
+      "date": "2025-12-08",
       "register": [],
       "id": "fd21"
     }

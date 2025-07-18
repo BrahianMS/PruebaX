@@ -66,40 +66,40 @@ export function dashboard() {
                             
                         </main>
                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="staticBackdropLabel">New Note</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="form" id="content">
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="newEvent" type="text" placeholder="Event" required>
-                                                <label for="newEvent">Event name</label>
-                                            </div>
-                                            <div class="form-floating">
-                                                <div class="mb-4" style="max-width: 600px;">
-                                                    <textarea class="form-control form-control-lg" rows="5" placeholder="Write the event description" id="eventDesc"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="eventCuote" type="text" placeholder="Capacity" required>
-                                                <label for="eventCuote">Event capacity</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="eventDate" type="text" placeholder="Date" required>
-                                                <label for="eventDate">Event date</label>
-                                            </div>
-                                        </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="button" class="btn btn-primary" id="saveNote">Save</button>
-                                        </div>
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">New Event</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form" id="content">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="newEvent" type="text" placeholder="Event" required>
+                                        <label for="newEvent">Event name</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <div class="mb-4" style="max-width: 600px;">
+                                            <textarea class="form-control form-control-lg" rows="5" placeholder="Write the event description" id="eventDesc"></textarea>
                                         </div>
                                     </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="eventCuote" type="number" placeholder="Capacity" required>
+                                        <label for="eventCuote">Event capacity</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="eventDate" type="date" placeholder="Date" required>
+                                        <label for="eventDate">Event date</label>
+                                    </div>
+                                </form>
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="saveNote">Save</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>`;
                     setTimeout(() => {
                         const saveNew = document.getElementById('saveNote');
@@ -108,9 +108,7 @@ export function dashboard() {
                                 e.preventDefault();
                                 saveEvent();
                             });
-                        } else {
-                            console.warn('Botón Save no encontrado');
-                        }
+                        };
                     }, 0);
     }
     
@@ -122,18 +120,16 @@ export function dashboard() {
     const enroll = document.getElementById("enroll")
     eventsCont(user.role)
 
+    if (events) {
     events.addEventListener('click', (e) => {
         e.preventDefault();
-
         eventsCont(user.role)}
-    )
+    )}
     if (enroll) {
         enroll.addEventListener('click', (e) => {
             e.preventDefault();
-    
             eventsEnroll(user.id)}
-        )
-    }
+        )};
     document.getElementById('logOut').addEventListener('click', () =>{
     sessionStorage.removeItem('user');
     sessionStorage.setItem('Auth', 'false');
@@ -147,8 +143,49 @@ async function eventsCont(role) {
     try {
         let res = await fetch('http://localhost:3000/events');
         let events = await res.json();
-        
-        eventContent.innerHTML = `<table class="table">
+        if (role == 'admin') {
+            eventContent.innerHTML = `<table class="table">
+                                        <button type="button" class="btn primary" id="add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ADD</button>
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Capacidad</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBody">
+                                        </tbody>
+                                    </table>`;
+            const tbody = document.getElementById('tableBody');
+            if (tbody){
+                events.forEach(event => {
+                tbody.innerHTML += `<tr>
+                                        <th scope="row">${event.name}</th>
+                                        <td>${event.desc}</td>
+                                        <td>${event.capacity}</td>
+                                        <td>${event.date}</td>
+                                        <td><button class="btn btn-warning edit" data-id="${event.id}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</button>
+                                        <button class="btn btn-danger del" data-id="${event.id}">Delete</button></td>
+                                    </tr>
+                                    `
+                })
+                
+                tbody.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('edit')) {
+                    const id = e.target.dataset.id;
+                    editEvent(id);
+                }
+                if (e.target && e.target.classList.contains('del')) {
+                    const id = e.target.dataset.id;
+                    destroy(id);
+                }
+                });
+            }
+        }
+        if (role == 'user') {
+            eventContent.innerHTML = `<table class="table">
                                 <thead>
                                     <tr>
                                     <th scope="col">Nombre</th>
@@ -161,29 +198,7 @@ async function eventsCont(role) {
                                 <tbody id="tableBody">
                                 </tbody>
                             </table>`;
-        const tbody = document.getElementById('tableBody');
-        if (role == 'admin') {
-            if (tbody){
-                const addBtn = `<button type="button" class="btn primary" id="add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ADD</button>`
-                const table = document.getElementsById('table');
-                eventContent.insertBefore(addBtn, table)
-                events.forEach(event => {
-                tbody.innerHTML += `<tr>
-                                        <th scope="row">${event.name}</th>
-                                        <td>${event.desc}</td>
-                                        <td>${event.capacity}</td>
-                                        <td>${event.date}</td>
-                                        <td><button class="btn btn-warning edit" data-id="${event.id}">Edit</button>
-                                        <button class="btn btn-danger del" data-id="${event.id}">Delete</button></td>
-                                    </tr>
-                                    `
-                })
-                
-                tbody.addEventListener('click', destroy)
-            }
-    }
-
-    if (role == 'user') {
+            const tbody = document.getElementById('tableBody');
             if (tbody){
                 events.forEach(event => {
                 tbody.innerHTML += `<tr>
@@ -195,8 +210,17 @@ async function eventsCont(role) {
                                     </tr>
                                     `
                 })
+                tbody.addEventListener('click', (e) => {
+                if (e.target && e.target.classList.contains('join')) {
+                    const id = e.target.dataset.id;
+                    const user = JSON.parse(sessionStorage.getItem('user'));
+                    const userId = user.id;
+                    
+                    joinEvent(id, userId);
+                }
+            });
             }
-    }
+        }
     }
     catch (error) {
         console.log('Error:', error)
@@ -230,7 +254,8 @@ async function eventsEnroll(userId) {
                                 <th scope="row">${event.name}</th>
                                 <td>${event.desc}</td>
                                 <td>${event.capacity}</td>
-                                <td>${event.date}</td>`
+                                <td>${event.date}</td>
+                            </tr>`
         });
     }
     catch (error) {
@@ -240,31 +265,24 @@ async function eventsEnroll(userId) {
 
 
 // Delete note    
-function destroy(e) {
-  if (e.target && e.target.classList.contains('del')) {
-    const id = e.target.dataset.id;
-
+function destroy(eventId) {
     const confirmDelete = confirm(`Are you sure you want to delete this event?`);
     if (!confirmDelete) return;
-
-    if (id) {
-      fetch(`http://localhost:3000/events/${id}`, {
+    try {
+        fetch(`http://localhost:3000/events/${eventId}`, {
         method: 'DELETE',
-      })
-      .then(response => {
+        })
         if (response.ok) {
-          alert('Event successfully deleted');
-          console.log('Event successfully deleted');
+            alert('Event successfully deleted');
+            console.log('Event successfully deleted');
         } else {
-          alert('Delete error');
-          console.error('Delete error');
+            alert('Delete error');
+            console.error('Delete error');
         }
-      })
-      .catch(error => {
-        console.error('Web error:', error);
-      });
     }
-  }
+    catch (error) {
+        (console.error('Web error:', error));
+    };
 };
 
 async function saveEvent() {
@@ -300,5 +318,89 @@ async function saveEvent() {
     } catch (error) {
       console.error("Error adding the event:", error);
       alert('There were a problem adding the event.');
+    }
+}
+async function editEvent(eventId) {
+    try {
+        let res = await fetch(`http://localhost:3000/events/${eventId}`);
+        let event = await res.json();
+        document.getElementById('newEvent').value = event.name;
+        document.getElementById('eventDesc').value = event.desc;
+        document.getElementById('eventCuote').value = event.capacity;
+        document.getElementById('eventDate').value = event.date;
+        document.getElementById('staticBackdropLabel').textContent = "Edit Event";
+        setTimeout(() => {
+        const saveButton = document.getElementById('saveNote');
+        if (saveButton) {
+            const newButton = saveButton.cloneNode(true);
+            saveButton.parentNode.replaceChild(newButton, saveButton);
+
+            newButton.addEventListener('click', () => updateEvent(eventId, event.register));
+        }
+        },);
+    } catch (error) {
+        console.log('Error fetching event data for editing:', error);
+    }
+}
+
+async function updateEvent(eventId, asist) {
+    const title = document.getElementById('newEvent').value;
+    const desc = document.getElementById('eventDesc').value;
+    const cuote = document.getElementById('eventCuote').value;
+    const date = document.getElementById('eventDate').value;
+    if (!title || !desc || !cuote || !date) {
+        return alert('You must fill in all fields');
+    }
+    const updatedEvent = {
+        name: title,
+        desc: desc,
+        capacity: cuote,
+        date: date,
+        register: asist
+    };
+    try {
+        const response = await fetch(`http://localhost:3000/events/${eventId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedEvent)
+        });
+
+        if (response.ok) {
+            alert('Event updated successfully');
+            eventsCont('admin');
+        } else {
+            const error = await response.json();
+            alert('Error: ' + error.message);
+        }
+    } catch (error) {
+        console.error('Error updating the event:', error);
+        alert('There was a problem updating the event.');
+    }
+}
+
+async function joinEvent(eventId, userId) {
+    try {
+        let res = await fetch(`http://localhost:3000/events/${eventId}`);
+        let event = await res.json();
+        if (event.register.includes(userId)) {
+            return alert("You've already joined")
+        }
+        event.register.push(userId);
+        const updateRes = await fetch(`http://localhost:3000/events/${eventId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ register: event.register })
+        });
+        if (updateRes.ok) {
+            alert("You have successfully joined the event.");
+        } else {
+            alert("There was an error joining the event.");
+        }
+
+    } catch (error) {
+        console.log('Error:', error);
+        alert("Could not join the event.");
     }
 }
